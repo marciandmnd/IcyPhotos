@@ -4,9 +4,19 @@ var favicon = require('serve-favicon');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
+var multer = require('multer');
 
-var routes = require('./routes/index');
-var users = require('./routes/users');
+// multer storage config
+var storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, 'public/photos')
+  },
+  filename: function (req, file, cb) {
+    cb(null, Date.now() + path.extname(file.originalname)) //Appending .jpg
+  }
+})
+var upload = multer({ storage: storage })
+
 var photos = require('./routes/photos');
 
 var app = express();
@@ -15,28 +25,12 @@ var app = express();
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
 
-// set directory to upload files 
-app.set('photos', path.join(__dirname, '/public/photos'));
-
-// uncomment after placing your favicon in /public
-//app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
+app.use(favicon(path.join(__dirname, 'public', 'favicon.png')));
 app.use(logger('dev'));
 app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
-app.use(favicon(__dirname + '/public/favicon.png'));
-// app.use('/', routes);
-app.use('/users', users);
-
-app.get('/', photos.list);
-
-// catch 404 and forward to error handler
-app.use(function(req, res, next) {
-  var err = new Error('Not Found');
-  err.status = 404;
-  next(err);
-});
 
 // error handlers
 
@@ -62,5 +56,15 @@ app.use(function(err, req, res, next) {
   });
 });
 
+// catch 404 and forward to error handler
+app.use(function(req, res, next) {
+  var err = new Error('Not Found');
+  err.status = 404;
+  next(err);
+});
+
 app.listen(3000);
-module.exports = app;
+
+app.get('/', photos.list);
+app.get('/upload', photos.form);
+app.post('/upload', upload.single('photo[image]'), photos.submit);

@@ -1,18 +1,32 @@
-var photos = [];
+var Photo = require('../models/Photo');
+var fs = require('fs');
 
-photos.push({
-  name: 'Node.js Logo',
-  path: 'http://nodejs.org/images/logos/nodejs-green.png'
-});
+exports.list = function (req, res, next) {
+  // console.log(req.query.test);
+  Photo.find({}, function(err, photos){
+    if (err) return next(err);
+    res.render('photos', {
+      title: 'Photos',
+      photos: photos
+    });
+  });    
+};
 
-photos.push({
-  name: 'Ryan Speaking',
-  path: 'http://nodejs.org/images/ryan-speaker.jpg'
-});
+exports.form = function(req, res) {
+  res.render('photos/upload', {
+    title: 'Photo upload'
+  });
+};
 
-exports.list = function(req, res){
-  res.render('photos', {
-    title: 'Photos',
-    photos: photos
+exports.submit = function(req, res, next) {
+  var img = req.file
+  var name = req.file.originalname || img.name;
+  Photo.create({
+    name: name,
+    path: img.filename
+
+  }, function(err){
+    if (err) return next(err);
+    res.redirect('/');
   });
 };
