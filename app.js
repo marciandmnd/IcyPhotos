@@ -6,6 +6,8 @@ var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var multer = require('multer');
 
+var port = process.env.PORT || 8080;
+
 // multer storage config
 var storage = multer.diskStorage({
   destination: function (req, file, cb) {
@@ -69,6 +71,6 @@ app.use(function(req, res, next) {
   next(err);
 });
 
-app.listen(3003);
+app.listen(port);
 
 
