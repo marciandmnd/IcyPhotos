@@ -14,7 +14,7 @@
     "mongoose": "^4.7.0",
     "morgan": "~1.6.1",
     "multer": "^1.2.0",
-    "serve-favicon": "~2.3.0"
+    "serve-favicon": "~2.3.0",
     "basscss": "~8.0.2"
   }
 }
