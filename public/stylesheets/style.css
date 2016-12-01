@@ -15,3 +15,16 @@ a {
   border-radius: 5px;
   box-shadow: 0 1px 2px #ddd;
 }
+
+#node-brand {
+  background-image: url('../images/nodejs-128-sprite.png');
+  width: 128px;
+  height: 128px;
+  transition: all 0.3s ease;
+}
+
+#node-brand:hover {
+  background-color: red;
+  background-position-y: 128px;
+  border-radius: 100%;
+}

@@ -3,19 +3,26 @@
   <head>
     <title><%= title %></title>
     <link rel='stylesheet' href='/stylesheets/style.css' />
+    <link rel='stylesheet' href='/basscss/basscss.min.css' />
   </head>
   <body>
-    <h1>Photos</h1>
-    <p>Express stock photo application</p>
-    <div id='photos'>
-      <% photos.forEach(function(photo) { %>
-        <div class='photo'>
-          <h2><%= photo.name %></h2>
-          <a href='/photo/<%= photo.id %>/download'>
-            <img src='photos/<%= photo.path%>' />
-          </a>
+    <div id='node-brand' class='absolute top-0 right-0'></div>
+    <div class='max-width-4 mx-auto'>
+      <div class='clearfix'>
+        <div class='col col-12'>
+          <h1>Photos</h1>
+          <p>Express stock photo application</p>
+          <div id='photos'>
+            <% photos.forEach(function(photo) { %>
+              <div class='photo'>
+                <h2><%= photo.name %></h2>
+                <a href='/photo/<%= photo.id %>/download'>
+                  <img src='photos/<%= photo.path%>' />
+                </a>
+              </div>
+            <% }); %>
+          </div>
         </div>
-      <% }); %>
-    </div>
+      </div>
   </body>
 </html>
