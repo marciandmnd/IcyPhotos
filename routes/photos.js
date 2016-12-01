@@ -1,5 +1,7 @@
 var Photo = require('../models/Photo');
 var fs = require('fs');
+var path = require('path');
+var join = path.join;
 
 exports.list = function (req, res, next) {
   // console.log(req.query.test);
@@ -29,4 +31,16 @@ exports.submit = function(req, res, next) {
     if (err) return next(err);
     res.redirect('/');
   });
+};
+
+exports.download = function(dir) {
+  return function(req, res, next) {
+    var id = req.params.id;
+    Photo.findById(id, function(err, photo){
+      console.log(photo);
+      if (err) return next(err);
+      var path = join(dir, photo.path);
+      res.sendfile(path);
+    })
+  };
 };

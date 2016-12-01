@@ -24,6 +24,7 @@ var app = express();
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
+app.set('photos', path.join(__dirname, 'public/photos'));
 
 app.use(favicon(path.join(__dirname, 'public', 'favicon.png')));
 app.use(logger('dev'));
@@ -32,6 +33,10 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
+app.get('/', photos.list);
+app.get('/upload', photos.form);
+app.post('/upload', upload.single('photo[image]'), photos.submit);
+app.get('/photo/:id/download', photos.download(app.get('photos')));
 // error handlers
 
 // development error handler
@@ -42,7 +47,7 @@ if (app.get('env') === 'development') {
     res.render('error', {
       message: err.message,
       error: err
-    });
+    });git 
   });
 }
 
@@ -63,8 +68,6 @@ app.use(function(req, res, next) {
   next(err);
 });
 
-app.listen(3000);
+app.listen(3003);
 
-app.get('/', photos.list);
-app.get('/upload', photos.form);
-app.post('/upload', upload.single('photo[image]'), photos.submit);
+
