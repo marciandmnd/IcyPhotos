@@ -18,13 +18,13 @@ a {
 
 #node-brand {
   background-image: url('../images/nodejs-128-sprite.png');
-  width: 128px;
-  height: 128px;
+  width: 64px;
+  height: 64px;
   transition: all 0.3s ease;
 }
 
 #node-brand:hover {
   background-color: red;
-  background-position-y: 128px;
+  background-position-y: 64px;
   border-radius: 100%;
 }
