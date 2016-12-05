@@ -30,3 +30,12 @@ a {
   background-position: 128px 128px;
   border-radius: 100%;
 }
+
+#btn-upload{
+  width: 24px;
+  height: 24px;
+  padding: 8px;
+  background-color: orange;
+  color: black;
+  border-radius: 100%;
+}

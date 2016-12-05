@@ -1,18 +1,19 @@
 require('dotenv').config();
-var express = require('express');
-var aws = require('aws-sdk');
-var path = require('path');
-var favicon = require('serve-favicon');
-var logger = require('morgan');
-var cookieParser = require('cookie-parser');
-var bodyParser = require('body-parser');
-var fs = require('fs');
+
+const express = require('express');
+const aws = require('aws-sdk');
+const path = require('path');
+const favicon = require('serve-favicon');
+const logger = require('morgan');
+const cookieParser = require('cookie-parser');
+const bodyParser = require('body-parser');
+
 const s3 = new aws.S3();
-var S3_BUCKET = process.env.S3_BUCKET;
+const S3_BUCKET = process.env.S3_BUCKET;
 
-var port = process.env.PORT || 8080;
+const port = process.env.PORT || 8080;
 
-var photos = require('./routes/photos');
+const photos = require('./routes/photos');
 
 var app = express();
 
@@ -28,13 +29,13 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 app.use('/basscss', express.static(__dirname + '/node_modules/basscss/css/'));
+app.use('/font-awesome', express.static(__dirname + '/node_modules/font-awesome/css/'));
+
 app.get('/', photos.list);
 app.get('/upload', photos.form);
 app.post('/upload', photos.submit);
-// app.get('/photo/:id/download', photos.download);
 
 app.get('/photo/:id/download', function(req, res){
-  // var s3 = new AWS.S3();
   var s3Params = {
       Bucket: S3_BUCKET,
       Key: 'node.png'
@@ -48,7 +49,6 @@ app.get('/photo/:id/download', function(req, res){
     }
   });
 });
-
 
 // get signed request for s3 photo upload
 app.get('/sign-s3', (req, res) => {

@@ -1,18 +1,17 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title><%= title %></title>
-    <link rel='stylesheet' href='/stylesheets/style.css' />
-    <link rel='stylesheet' href='/basscss/basscss.min.css' />
+    <% include ../partials/head %>
   </head>
   <body>
-    <a href='https://nodejs.org/' target='_blank'>
-      <div id='node-brand' class='absolute top-0 right-0 m1'></div>
-    </a>
+    <% include ../partials/navbar %>
     <div class='max-width-4 mx-auto'>
       <div class='clearfix'>
         <div class='col col-12'>
-          <h1>Photos</h1>
+          <h1 class='inline'>Photos</h1>
+          <a href='/upload' class='text-decoration-none'>
+            <i class="fa fa-upload" aria-hidden="true"></i>
+          </a>
           <p>Express stock photo application</p>
           <div id='photos'>
             <% photos.forEach(function(photo) { %>
