@@ -1,4 +1,6 @@
+require('dotenv').config();
 var express = require('express');
+var aws = require('aws-sdk');
 var path = require('path');
 var favicon = require('serve-favicon');
 var logger = require('morgan');
@@ -6,18 +8,21 @@ var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var multer = require('multer');
 
+var S3_BUCKET = process.env.S3_BUCKET;
+
 var port = process.env.PORT || 8080;
 
-// multer storage config
-var storage = multer.diskStorage({
-  destination: function (req, file, cb) {
-    cb(null, 'public/photos')
-  },
-  filename: function (req, file, cb) {
-    cb(null, Date.now() + path.extname(file.originalname)) //Appending .jpg
-  }
-})
-var upload = multer({ storage: storage })
+// multer storage config for local storage
+// var storage = multer.diskStorage({
+//   destination: function (req, file, cb) {
+//     cb(null, 'public/photos')
+//   },
+//   filename: function (req, file, cb) {
+//     cb(null, Date.now() + path.extname(file.originalname)) //Appending .jpg
+//   }
+// });
+
+// var upload = multer({ storage: storage })
 
 var photos = require('./routes/photos');
 
@@ -38,8 +43,41 @@ app.use('/basscss', express.static(__dirname + '/node_modules/basscss/css/'));
 
 app.get('/', photos.list);
 app.get('/upload', photos.form);
-app.post('/upload', upload.single('photo[image]'), photos.submit);
+app.post('/upload', photos.submit);
+
+// for saving files locally via multer
+//app.post('/upload', upload.single('photo[image]'), photos.submit);
+
 app.get('/photo/:id/download', photos.download(app.get('photos')));
+
+// get signed request for s3 photo upload
+app.get('/sign-s3', (req, res) => {
+  const s3 = new aws.S3();
+  const fileName = req.query['file-name'];
+  const fileType = req.query['file-type'];
+  const s3Params = {
+    Bucket: S3_BUCKET,
+    Key: fileName,
+    Expires: 60,
+    ContentType: fileType,
+    ACL: 'public-read'
+  };
+
+  s3.getSignedUrl('putObject', s3Params, (err, data) => {
+    if(err){
+      return res.end();
+    }
+    const returnData = {
+      signedRequest: data,
+      url: `https://${S3_BUCKET}.s3-eu-west-1.amazonaws.com/${fileName}`
+    };
+    // res.setHeader('access-control-allow-origin', 'http://localhost:8080');
+    res.write(JSON.stringify(returnData));
+    res.end();
+  });
+});
+
+
 // error handlers
 
 // development error handler
@@ -50,7 +88,7 @@ if (app.get('env') === 'development') {
     res.render('error', {
       message: err.message,
       error: err
-    });git 
+    });
   });
 }
 
@@ -72,7 +110,3 @@ app.use(function(req, res, next) {
 });
 
 app.listen(port);
-
-module.exports = app;
-
-
