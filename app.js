@@ -6,23 +6,11 @@ var favicon = require('serve-favicon');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
-var multer = require('multer');
-
+var fs = require('fs');
+const s3 = new aws.S3();
 var S3_BUCKET = process.env.S3_BUCKET;
 
 var port = process.env.PORT || 8080;
-
-// multer storage config for local storage
-// var storage = multer.diskStorage({
-//   destination: function (req, file, cb) {
-//     cb(null, 'public/photos')
-//   },
-//   filename: function (req, file, cb) {
-//     cb(null, Date.now() + path.extname(file.originalname)) //Appending .jpg
-//   }
-// });
-
-// var upload = multer({ storage: storage })
 
 var photos = require('./routes/photos');
 
@@ -40,19 +28,30 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 app.use('/basscss', express.static(__dirname + '/node_modules/basscss/css/'));
-
 app.get('/', photos.list);
 app.get('/upload', photos.form);
 app.post('/upload', photos.submit);
+// app.get('/photo/:id/download', photos.download);
 
-// for saving files locally via multer
-//app.post('/upload', upload.single('photo[image]'), photos.submit);
+app.get('/photo/:id/download', function(req, res){
+  // var s3 = new AWS.S3();
+  var s3Params = {
+      Bucket: S3_BUCKET,
+      Key: 'node.png'
+  };
+  s3.getObject(s3Params, function(err, data) {
+    if (err === null) {
+       res.attachment('file.ext'); // or whatever your logic needs
+       res.send(data.Body);
+    } else {
+       res.status(500).send(err);
+    }
+  });
+});
 
-app.get('/photo/:id/download', photos.download(app.get('photos')));
 
 // get signed request for s3 photo upload
 app.get('/sign-s3', (req, res) => {
-  const s3 = new aws.S3();
   const fileName = req.query['file-name'];
   const fileType = req.query['file-type'];
   const s3Params = {
@@ -71,12 +70,10 @@ app.get('/sign-s3', (req, res) => {
       signedRequest: data,
       url: `https://${S3_BUCKET}.s3-eu-west-1.amazonaws.com/${fileName}`
     };
-    // res.setHeader('access-control-allow-origin', 'http://localhost:8080');
     res.write(JSON.stringify(returnData));
     res.end();
   });
 });
-
 
 // error handlers
 

@@ -19,7 +19,7 @@
               <div class='photo'>
                 <h2><%= photo.name %></h2>
                 <a href='/photo/<%= photo.id %>/download'>
-                  <img src='photos/<%= photo.path%>' />
+                  <img src='https://s3-eu-west-1.amazonaws.com/icy-photo-development/<%= photo.path%>' />
                 </a>
               </div>
             <% }); %>

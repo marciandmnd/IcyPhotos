@@ -1,7 +1,5 @@
 var Photo = require('../models/Photo');
-var fs = require('fs');
-var path = require('path');
-var join = path.join;
+var multiparty = require('multiparty');
 
 exports.list = function (req, res, next) {
   // console.log(req.query.test);
@@ -21,26 +19,26 @@ exports.form = function(req, res) {
 };
 
 exports.submit = function(req, res, next) {
-  var img = req.file
-  var name = req.file.originalname || img.name;
-  Photo.create({
-    name: name,
-    path: img.filename
+  var form = new multiparty.Form();
 
-  }, function(err){
-    if (err) return next(err);
-    res.redirect('/');
+  form.parse(req, function(err, fields, files) {
+    var name = fields['photo[name]'];
+    var img = files['photo[image]'][0];
+    
+    Photo.create({
+      name: name,
+      path: img.originalFilename
+    }, function(err){
+      if (err) return next(err);
+      res.redirect('/');
+    });
   });
 };
 
-exports.download = function(dir) {
-  return function(req, res, next) {
-    var id = req.params.id;
-    Photo.findById(id, function(err, photo){
-      console.log(photo);
-      if (err) return next(err);
-      var path = join(dir, photo.path);
-      res.sendfile(path);
-    })
-  };
+exports.download = function(req, res, next) {
+  var id = req.params.id;
+  Photo.findById(id, function(err, photo){
+    if (err) return next(err);
+    res.sendfile('https://s3-eu-west-1.amazonaws.com/icy-photo-development/' + photo.path);
+  });
 };
