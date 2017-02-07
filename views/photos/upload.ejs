@@ -7,13 +7,13 @@
   <% include ../partials/navbar %>
   <div class='max-width-4 mx-auto'>
     <a href='/' class='text-decoration-none'>
-      <i class="fa fa-arrow-left" aria-hidden="true"></i>
+      <i class="fa fa-arrow-left fa-2x" aria-hidden="true"></i>
     </a>
-    <h1 class='inline'><%= title %></h1>
+    <h1 class='inline kumar-one'><%= title %></h1>
     <p>Upload a photo to your account below.</p>
-    <form method='post' enctype='multipart/form-data'>
+    <form method='post' enctype='multipart/form-data' class="form max-width-2">
       <p>
-        <input type='text', name='photo[name]', placeholder='Name'/>
+        <input type='text' name='photo[name]' placeholder='Name' class="text-input" />
       </p>
       <p>
         <input id='file' type='file', name='photo[image]'/>
