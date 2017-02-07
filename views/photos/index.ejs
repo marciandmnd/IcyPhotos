@@ -6,9 +6,11 @@
   <body>
     <% include ../partials/navbar %>
     <div class='max-width-4 mx-auto'>
+      <% if (message.length > 0) { %>
+        <div class="alert alert-danger"><%= message %></div>
+      <% } %>
       <div class='clearfix'>
         <div class='col col-12'>
-
           <h1 class="kumar-one">Recent uploads</h1>
           <hr/>
           <div id='photos'>

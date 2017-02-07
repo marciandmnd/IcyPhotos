@@ -10,8 +10,9 @@ exports.list = function (req, res, next) {
   Photo.find({}, function(err, photos){
     if (err) return next(err);
     res.render('photos', {
-      title: 'Photos',
-      photos: photos
+      title: 'IcyPhotos',
+      photos: photos,
+      message: req.flash('loginMessage')
     });
   });    
 };

@@ -3,12 +3,28 @@
     <h1 class='kumar-one inline'>IcyPhotos</h1>
   </a>
   <ul class='inline right'>
-    <li>
-      <a href='/upload' class='text-decoration-none kumar-one'>
-        <i class="fa fa-upload" aria-hidden="true"></i>
-        Upload
-      </a>
-    </li>
+  <% console.log(path) %>
+    <% if(login) { %>
+      <li class="inline mx1">
+        <a href='/upload' class='text-decoration-none kumar-one'>
+          <i class="fa fa-upload" aria-hidden="true"></i>
+          Upload
+        </a>
+      </li>
+       <li class="inline mx1">
+        <a href='/logout' class='text-decoration-none kumar-one'>
+          <i class="fa fa-sign-out" aria-hidden="true"></i>
+          Log out
+        </a>
+      </li>
+    <% } else if (path != "/login") { %>
+      <li>
+        <a href='/login' class='text-decoration-none kumar-one'>
+          <i class="fa fa-sign-in" aria-hidden="true"></i>
+          Log in
+        </a>
+      </li>
+    <% } %>
   </ul>
   <a href='https://nodejs.org/' target='_blank' id='lnk-node-brand'>
     <div id='node-brand' class='absolute top-0 right-0 m1'></div>

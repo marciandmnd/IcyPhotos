@@ -7,6 +7,15 @@ const favicon = require('serve-favicon');
 const logger = require('morgan');
 const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
+const passport = require('passport');
+const LocalStrategy = require('passport-local').Strategy;
+const session = require('express-session');
+const flash = require('connect-flash');
+var mongoose = require('mongoose');
+var configDB = require('./config/database.js');
+
+// Connect to DB
+mongoose.connect(configDB.url);
 
 const s3 = new aws.S3();
 const S3_BUCKET = process.env.S3_BUCKET;
@@ -30,8 +39,27 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 app.use('/basscss', express.static(__dirname + '/node_modules/basscss/css/'));
 app.use('/font-awesome', express.static(__dirname + '/node_modules/font-awesome/css/'));
+app.use(session({ secret: 'asdffda1234', resave: true, saveUnitialized: true }));
+app.use(passport.initialize());
+app.use(passport.session()); // persistent login sessions
+app.use(flash()); // use connect-flash for flash messages stored in session
 
-app.get('/', photos.list);
+
+// config passport
+require('./config/passport')(passport);
+app.use(function (req, res, next) {
+  res.locals.login = req.isAuthenticated();
+  next();
+});
+app.use(function (req, res, next) {
+  res.locals.path = req.path;
+  next();
+});
+// Routes
+require('./routes/routes.js')(app, passport);
+
+
+// app.get('/', photos.list);
 app.get('/upload', photos.form);
 app.post('/upload', photos.submit);
 

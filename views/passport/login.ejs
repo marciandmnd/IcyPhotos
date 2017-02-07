@@ -1,0 +1,36 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Log in</title>
+    <% include ../partials/head %>
+  </head>
+  <body>
+    <% include ../partials/navbar %>
+    <div class='max-width-2 mx-auto'>
+      <h1 class='inline kumar-one'>Login</h1>
+
+      <!-- show any messages that come back with authentication -->
+      <% if (message.length > 0) { %>
+        <div class="alert alert-danger"><%= message %></div>
+      <% } %>
+
+      <!-- LOGIN FORM -->
+      <form action="/login" method="post" class="max-width-2">
+        <div class="my1">
+          <label>Email</label>
+          <input type="text" class="text-input" name="email">
+        </div>
+
+        <div class="my1">
+          <label>Password</label>
+          <input type="password" class="text-input" name="password">
+        </div>
+
+        <button type="submit" class="btn btn-primary">Login</button>
+      </form>
+      <hr />
+      <p>Need an account? <a href="/signup">Signup</a></p>
+      <p>Or go <a href="/">home</a>.</p>
+    </div>
+  </body>
+</html>
