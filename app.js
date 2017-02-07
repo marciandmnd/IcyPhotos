@@ -35,20 +35,7 @@ app.get('/', photos.list);
 app.get('/upload', photos.form);
 app.post('/upload', photos.submit);
 
-app.get('/photo/:id/download', function(req, res){
-  var s3Params = {
-      Bucket: S3_BUCKET,
-      Key: 'node.png'
-  };
-  s3.getObject(s3Params, function(err, data) {
-    if (err === null) {
-       res.attachment('file.ext'); // or whatever your logic needs
-       res.send(data.Body);
-    } else {
-       res.status(500).send(err);
-    }
-  });
-});
+app.get('/photo/:id/download', photos.download);
 
 // get signed request for s3 photo upload
 app.get('/sign-s3', (req, res) => {

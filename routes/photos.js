@@ -1,5 +1,9 @@
 var Photo = require('../models/Photo');
 var multiparty = require('multiparty');
+const aws = require('aws-sdk');
+
+const s3 = new aws.S3();
+const S3_BUCKET = process.env.S3_BUCKET;
 
 exports.list = function (req, res, next) {
   // console.log(req.query.test);
@@ -37,8 +41,25 @@ exports.submit = function(req, res, next) {
 
 exports.download = function(req, res, next) {
   var id = req.params.id;
+
+
   Photo.findById(id, function(err, photo){
-    if (err) return next(err);
-    res.sendfile('https://s3-eu-west-1.amazonaws.com/icy-photo-development/' + photo.path);
+    let key = photo.path;
+
+    var s3Params = {
+      Bucket: S3_BUCKET,
+      Key: key
+    };
+
+    s3.getObject(s3Params, function(err, data) {
+      console.log(data);
+      if (err === null) {
+         res.attachment(key); // or whatever your logic needs
+         res.send(data.Body);
+      } else {
+         res.status(500).send(err);
+      }
+    });
+
   });
 };
