@@ -62,7 +62,6 @@ require('./routes/routes.js')(app, passport);
 // app.get('/', photos.list);
 app.get('/upload', photos.form);
 app.post('/upload', photos.submit);
-
 app.get('/photo/:id/download', photos.download);
 
 // get signed request for s3 photo upload
