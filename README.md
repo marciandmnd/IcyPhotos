@@ -1,4 +1,5 @@
 # IcyPhotos
+![Icon](icon.png)
 
 Photo sharing and gallery application. Built with Node/Express/MongoDB
 
