@@ -1,5 +1,6 @@
+![Icon](icon.png "IcyPhotos")
+
 # IcyPhotos
-![Icon](icon.png)
 
 Photo sharing and gallery application. Built with Node/Express/MongoDB
 
@@ -28,25 +29,7 @@ S3_BUCKET=xx
 MONGODB_URI=xx
 ```
 
-These environement variables should be placed in a `.env` file in the project's root directory.
-
-### Installing
-
-A step by step series of examples that tell you have to get a development env running
-
-Say what the step will be
-
-```
-Give the example
-```
-
-And repeat
-
-```
-until finished
-```
-
-End with an example of getting some data out of the system or using it for a little demo
+These environement variables should be defined in a `.env` file in the project's root directory.
 
 ## Running the tests
 
